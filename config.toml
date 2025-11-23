@@ -40,3 +40,10 @@ socials = [
     { name = "twitter", url = "https://x.com/nxm_rs", icon = "twitter" },
     { name = "github", url = "https://github.com/nxm-rs", icon = "github" },
 ]
+
+[extra.analytics]
+enabled = true
+
+[extra.analytics.plausible]
+domain = "nxm.rs"
+script_url = "https://plausible.nxm.rs/js/script.hash.outbound-links.pageview-props.tagged-events.js"

@@ -6,6 +6,9 @@ slug = "keycard"
 
 [taxonomies]
 tags=["keycard", "javacard", "iso7816"]
+
+[extra]
+author = "mfw78"
 +++
 
 ## Introduction

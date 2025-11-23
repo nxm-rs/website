@@ -108,8 +108,12 @@
                 {{ post_macros::page_header(title=page.title) }}
 
                 <div class="meta">
+                    {% if page.extra.author %}
+                        By <span class="author">{{ page.extra.author }}</span>
+                    {% endif %}
+
                     {% if page.date %}
-                        Posted on <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
+                        {% if page.extra.author %}:: {% endif %}Posted on <time>{{ page.date | date(format="%Y-%m-%d") }}</time>
                     {% endif %}
 
                     {% if page.updated %}
