@@ -87,7 +87,12 @@ Accounts within an identity are partitioned into user and system regions. See [A
 
 **System accounts**:
 - Reserved for Nexum infrastructure
-- Specific allocations defined in [Appendix I](/specs/appendix-i-system-key-registry)
+- Use indices in the system range as defined in [Appendix I](/specs/appendix-i-system-key-registry)
+- Include the **gas tank** for account abstraction scenarios:
+  - Holds funds for paying gas on behalf of other accounts in the identity
+  - Enables gasless UX for user accounts via paymasters or relayers
+  - Is identity-scoped (each identity has its own gas tank)
+  - See [Appendix I §2.2](/specs/appendix-i-system-key-registry#22-signing-key-registry) for the specific index allocation
 
 ### 3. Identity Isolation
 
@@ -108,27 +113,9 @@ Strict isolation prevents:
 - **Configuration bleed**: No shared preferences or settings
 - **UX confusion**: Clear separation in user interfaces
 
-### 4. System Accounts
+### 4. Identity Lifecycle
 
-Each identity has reserved system accounts for infrastructure operations. These accounts use indices in the system range as defined in [Appendix I: System Key Registry](/specs/appendix-i-system-key-registry).
-
-#### 4.1 Gas Tank
-
-Each identity SHOULD reserve a system account for gas funding in account abstraction scenarios. The gas tank account:
-
-- Holds funds for paying gas on behalf of other accounts in the identity
-- Enables gasless UX for user accounts via paymasters or relayers
-- Is identity-scoped (each identity has its own gas tank)
-
-See [Appendix I §2.2](/specs/appendix-i-system-key-registry#22-signing-key-registry) for the specific index allocation.
-
-#### 4.2 Additional System Accounts
-
-Further system account allocations are defined in [Appendix I](/specs/appendix-i-system-key-registry).
-
-### 5. Identity Lifecycle
-
-#### 5.1 Creation
+#### 4.1 Creation
 
 An identity is **implicitly created** when:
 1. A new `identity'` index is used for key derivation
@@ -136,7 +123,7 @@ An identity is **implicitly created** when:
 
 There is no explicit "create identity" operation—using a new index creates the identity.
 
-#### 5.2 Enumeration
+#### 4.2 Enumeration
 
 Identities are enumerated via **deterministic metadata location**:
 
@@ -153,7 +140,7 @@ Identity 2 → metadata at deterministic_location(2)
 
 **Optional fallback**: Implementations MAY additionally support BIP-44 gap-limit scanning (20 consecutive empty accounts) for recovery scenarios where metadata is unavailable.
 
-#### 5.3 Switching
+#### 4.3 Switching
 
 Switching between identities:
 1. **Terminate all connections**: Close all backend connections, streams, and subscriptions bound to the current identity
@@ -164,7 +151,7 @@ Switching between identities:
 
 Active identity MUST be clearly indicated to the user.
 
-#### 5.4 Connection Binding
+#### 4.4 Connection Binding
 
 All backend connections and streams MUST be identity-scoped to prevent cross-identity data leakage:
 
@@ -185,7 +172,7 @@ Identity N
 - Connections MUST NOT be reused across identities
 - Connection metadata (auth tokens, session IDs) MUST NOT leak between identities
 
-#### 5.5 Deletion
+#### 4.5 Deletion
 
 Identity deletion is a **metadata-only operation**:
 1. Delete identity's stored metadata
@@ -197,9 +184,9 @@ Identity deletion is a **metadata-only operation**:
 - Move funds (user is responsible for transferring assets first)
 - Affect other identities
 
-### 6. Account Recovery
+### 5. Account Recovery
 
-#### 6.1 Preferred Method: EIP-7702 Delegation
+#### 5.1 Preferred Method: EIP-7702 Delegation
 
 The preferred recovery mechanism is via [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) delegation to externally-secured accounts:
 
@@ -210,7 +197,7 @@ The preferred recovery mechanism is via [EIP-7702](https://eips.ethereum.org/EIP
 
 Delegation allows a secured external account to act on behalf of any account within an identity, providing recovery without seed phrase exposure.
 
-#### 6.2 Delegation Isolation
+#### 5.2 Delegation Isolation
 
 To maintain identity isolation, delegation MUST follow these rules:
 
@@ -223,16 +210,16 @@ Identity 0 → delegates to → Multisig A
 Identity 1 → delegates to → Multisig B  (different from A)
 ```
 
-#### 6.3 Optional: Seed Phrase Backup
+#### 5.3 Optional: Seed Phrase Backup
 
 Users MAY choose to backup their seed phrase as an additional recovery option. This is NOT required and carries risks:
 
 - Seed compromise affects ALL identities simultaneously
 - Physical backup security is user's responsibility
 
-### 7. Identity Metadata
+### 6. Identity Metadata
 
-#### 7.1 No Cross-Identity Organization
+#### 6.1 No Cross-Identity Organization
 
 Identities MUST NOT support folder/file structuring or any organizational metadata that spans multiple identities. Such metadata would implicitly link identities together, violating the isolation requirement.
 
@@ -241,7 +228,7 @@ Identities MUST NOT support folder/file structuring or any organizational metada
 - Tags or labels shared across identities
 - Any metadata that references other identities
 
-#### 7.2 Per-Identity Metadata
+#### 6.2 Per-Identity Metadata
 
 Each identity MAY have its own independent metadata (name, avatar, preferences), but this metadata:
 
@@ -252,14 +239,14 @@ Each identity MAY have its own independent metadata (name, avatar, preferences),
 
 Folder/file organizational metadata applies only to **accounts within an identity**, not to identities themselves.
 
-### 8. Security Considerations
+### 7. Security Considerations
 
-#### 8.1 Identity Correlation
+#### 7.1 Identity Correlation
 
 While identities are cryptographically isolated, correlation is still possible via:
 - On-chain transaction patterns
 - Timing analysis
-- Shared EIP-7702 delegates (violates Section 6.2)
+- Shared EIP-7702 delegates (violates Section 5.2)
 - Metadata leakage (if storage is compromised)
 
 Users seeking maximum privacy SHOULD:
@@ -267,16 +254,15 @@ Users seeking maximum privacy SHOULD:
 - Use separate delegate accounts per identity
 - Avoid patterns that link identities temporally or behaviorally
 
-#### 8.2 Seed Phrase Risks
+#### 7.2 Seed Phrase Risks
 
 If a user chooses to backup their seed phrase:
 - Seed compromise affects ALL identities simultaneously
 - All accounts across all identities become vulnerable
-- EIP-7702 delegation provides better isolation (per-identity delegates)
 
-### 9. Implementation Requirements
+### 8. Implementation Requirements
 
-#### 9.1 MUST
+#### 8.1 MUST
 
 1. Use hardened derivation for the identity (`account'`) level
 2. Maintain strict metadata separation between identities
@@ -286,14 +272,14 @@ If a user chooses to backup their seed phrase:
 6. Terminate all identity-bound connections on identity switch
 7. Bind all backend connections and streams to a specific identity
 
-#### 9.2 SHOULD
+#### 8.2 SHOULD
 
 1. Support multiple identities simultaneously loaded
 2. Provide identity switching UX
 3. Reserve system account index for gas tank
 4. Support EIP-7702 delegation setup for recovery
 
-#### 9.3 MAY
+#### 8.3 MAY
 
 1. Support identity naming and avatars
 2. Implement identity-scoped preferences
