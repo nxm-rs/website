@@ -32,11 +32,19 @@ repo_url = "https://github.com/nullisxyz/website-nexum/tree/main/content/"
 menu = [
     { name = "/posts", url = "/posts", weight = 1 },
     # { name = "/projects", url = "/projects", weight = 2 },
-    { name = "/about", url = "/about", weight = 3 },
-    { name = "/tags", url = "/tags", weight = 4 },
+    { name = "/specs", url = "/specs", weight = 3 },
+    { name = "/about", url = "/about", weight = 4 },
+    { name = "/tags", url = "/tags", weight = 5 },
 ]
 
 socials = [
     { name = "twitter", url = "https://x.com/nxm_rs", icon = "twitter" },
     { name = "github", url = "https://github.com/nxm-rs", icon = "github" },
 ]
+
+[extra.analytics]
+enabled = true
+
+[extra.analytics.plausible]
+domain = "nxm.rs"
+script_url = "https://plausible.nxm.rs/js/script.hash.outbound-links.pageview-props.tagged-events.js"

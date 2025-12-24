@@ -99,6 +99,15 @@
                 <img src="https://{{ user }}.{{ host }}//count?p={{ current_path }}&t={{ page.title | default(value=config.title) }}">
             </noscript>
         {% endif %}
+
+        {% if config.extra.analytics.plausible.domain %}
+            {% set domain = config.extra.analytics.plausible.domain %}
+            {% set script_url = config.extra.analytics.plausible.script_url | default(value="https://plausible.io/js/script.js") %}
+
+            <script defer
+                    data-domain="{{ domain }}"
+                    src="{{ script_url }}"></script>
+        {% endif %}
     {% endif %}
 
     {# Fancy Codeblock #}
