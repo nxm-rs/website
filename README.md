@@ -71,3 +71,4 @@ You can find all the configuration options [here](./content/posts/configuration.
 ## References
 
 This theme is based on [archie-zola](https://github.com/XXXMrG/archie-zola/).
+
