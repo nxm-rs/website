@@ -4,7 +4,6 @@ date = "2025-12-07"
 weight = 1
 slug = "nxp-1-identity-model"
 description = "Foundational identity model for Nexum, establishing how identities map to BIP-44 derivation paths, the one-to-many relationship between identities and accounts, strict identity isolation requirements, system account allocations, connection binding, and EIP-7702 delegation-based recovery"
-draft = true
 
 [taxonomies]
 tags=["specification", "identity", "account", "BIP44", "EIP-7702", "delegation", "recovery", "NXP"]
