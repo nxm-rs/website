@@ -4,7 +4,6 @@ date = "2025-12-24"
 weight = 6
 slug = "nxp-6-communication-protocol"
 description = "Hierarchical multiplexing protocol for WebTransport-based communication between the Nexum browser extension and standalone application, using Cap'n Proto encoding with three-level stream hierarchy for zero-ID request correlation"
-draft = true
 
 [taxonomies]
 tags=["specification", "protocol", "webtransport", "capnproto", "multiplexing", "NXP"]
