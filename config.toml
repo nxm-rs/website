@@ -1,4 +1,4 @@
-base_url = "https://nxm.rs/"
+base_url = "/"
 title = "Nexum"
 description = "Everything, blazing fast and decentralised"
 build_search_index = true
