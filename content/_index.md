@@ -5,7 +5,7 @@ template = "homepage.html"
 
 > Everything, blazing fast and decentralised.
 
-## Components
+## Components (test)
 
 Opinionated, written in Rust - known for its type safety, efficiency, and vibrant developer ecosystem.
 
